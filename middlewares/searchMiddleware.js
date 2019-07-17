@@ -17,7 +17,7 @@ const searchTracks = query => (dispatch, getState) => {
 
   const wildcardQuery = `${query}${shouldAddWildcard ? '*' : ''}`; // Trick to improve search results
 
-  return fetch(`${SPOTIFY_API_BASE}/search?q=${encodeURIComponent(wildcardQuery)}&type=track&limit=10`, {
+  return fetch(`${SPOTIFY_API_BASE}/search?q=${encodeURIComponent(wildcardQuery)}&type=track&limit=10&market=PE`, {
     headers: {
       Authorization: 'Bearer ' + getState().session.access_token
     }

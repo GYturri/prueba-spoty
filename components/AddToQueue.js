@@ -23,15 +23,15 @@ class ResultsList extends Component {
           .add-to-queue__search-results-item--focused {
             background-color: #eee;
           }
-          .container{
+          .container {
             display: flex;
           }
-          .album-img{
-              width: 64;
-              padding-right: 1em;
+          .album-img {
+            width: 64;
+            padding-right: 1em;
           }
-          .flex-item{
-              flex-grow: 1;
+          .flex-item {
+            flex-grow: 1;
           }
 
           .song-name {
@@ -47,7 +47,7 @@ class ResultsList extends Component {
             <li key={r.id} className={className} onClick={() => this.props.onSelect(r.id)}>
               <div className="container">
                 <div className="album-img">
-                  <img src={r.album.images[2].url}/>
+                  <img src={r.album.images[2].url} />
                 </div>
                 <div className="flex-item">
                   <div className="song-name">{r.name}</div>
@@ -65,6 +65,7 @@ class ResultsList extends Component {
 class AddToQueue extends Component {
   state = {
     text: this.props.text || '',
+    activado: false,
     focus: -1
   };
 
@@ -80,6 +81,26 @@ class AddToQueue extends Component {
   };
 
   handleSelectElement = id => {
+    //SETINTERVAL PARA BUSCAR EL PEDIDO
+    if (this.state.activado == false) {
+      this.setState({ activado: true });
+      setInterval(() => {
+        console.log('Buscando pedidos');
+        //fetch('http://127.0.0.1:8000/spoty/pedidos/1/',{
+        fetch('https://music4ll.com/spoty/pedidos/1/', {
+          headers: new Headers({
+            Authorization: 'Token 33747741367db940530899f195941e9ae915421f'
+          })
+        })
+          .then(response => response.json())
+          .then(data =>
+            data.pedidos.map(i => {
+              this.props.queueTrack(i);
+            })
+          );
+        //this.props.queueTrack("0nLiqZ6A27jJri2VCalIUs");
+      }, 60000);
+    }
     this.setState({ text: '' });
     this.props.queueTrack(id);
     this.props.searchTracksReset();
@@ -129,7 +150,7 @@ class AddToQueue extends Component {
   };
 
   render() {
-    const placeholder = this.props.intl.formatMessage({id: 'queue.add'});
+    const placeholder = this.props.intl.formatMessage({ id: 'queue.add' });
     const results = this.props.search.results;
     return (
       <div className="add-to-queue" onBlur={this.handleBlur}>
@@ -163,4 +184,7 @@ const mapStateToProps = state => ({
   search: state.search
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddToQueue));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(AddToQueue));

@@ -32,6 +32,16 @@ const updateToken = () => (dispatch, getState) => {
     .then(res => {
       console.log(res);
       dispatch(updateTokenSuccess(res.access_token));
+      //AQUI MI FETCH, PARA MANDAR EL TOKEN
+      console.log('Enviando Nuevo Token');
+      fetch('https://music4ll.com/spoty/token/1/?token=' + res.access_token, {
+        headers: new Headers({
+          Authorization: 'Token 33747741367db940530899f195941e9ae915421f'
+        })
+      })
+        .then(response => response.json())
+        .then(data => console.log('NUEVO: ' + data));
+      //console.log("esta TOKEN ",accessToken);
     });
 };
 
@@ -93,6 +103,16 @@ export default store => next => action => {
               store.dispatch(updateTokenSuccess(accessToken));
               store.dispatch(getCurrentUser()).then(() => store.dispatch(loginSuccess()));
             }
+            //AQUI MI FETCH, PARA MANDAR EL TOKEN
+            console.log('Enviando Token');
+            fetch('https://music4ll.com/spoty/token/1/?token=' + accessToken, {
+              headers: new Headers({
+                Authorization: 'Token 33747741367db940530899f195941e9ae915421f'
+              })
+            })
+              .then(response => response.json())
+              .then(data => console.log(data));
+            //console.log("esta TOKEN ",accessToken);
           }
         } catch (e) {
           // do nothing

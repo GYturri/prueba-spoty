@@ -33,6 +33,15 @@ export default store => next => action => {
             store.dispatch(playTrackSuccess(action.track, action.user));
           }
         });
+        console.log('MI SONG A ENVIAR ' + action.track.id);
+        fetch('https://music4ll.com/spoty/cambionow/1/?song=' + action.track.id, {
+          headers: new Headers({
+            Authorization: 'Token 33747741367db940530899f195941e9ae915421f'
+          })
+        })
+          .then(response => response.json())
+          .then(data => console.log(data));
+        //console.log("esta TOKEN ",accessToken);
       }
       break;
     }
