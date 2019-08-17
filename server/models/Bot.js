@@ -13,7 +13,9 @@ class Bot {
       if (!(key in this.recommendations)) {
         await getToken();
         const res = await spotifyApi.getRecommendations({ seed_tracks: trackIds });
+        //const res = await spotifyApi.getRecommendations({ seed_genres: metal });
         this.recommendations[key] = res.body.tracks;
+        console.log(res);
       }
       if (this.recommendations[key].length) {
         return this.recommendations[key].shift();
